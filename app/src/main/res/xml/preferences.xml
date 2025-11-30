@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="General">
+
+        <SwitchPreferenceCompat
+            app:title="Hide finished tasks"
+            app:key="hide_finished_tasks"
+            app:defaultValue="false" />
+
+        <ListPreference
+            app:title="Notification time"
+            app:key="notification_time"
+            app:entries="@array/notification_time_entries"
+            app:entryValues="@array/notification_time_values"
+            app:defaultValue="15"
+            app:useSimpleSummaryProvider="true"
+            />
+
+        <SwitchPreferenceCompat
+            app:title="Filter tasks by category"
+            app:key="category_filter"
+            app:defaultValue="false" />
+
+        <ListPreference
+            app:dependency="category_filter"
+            app:title="Select category"
+            app:key="category_list"
+            app:entries="@array/category_entries"
+            app:entryValues="@array/category_values"
+            app:useSimpleSummaryProvider="true"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
