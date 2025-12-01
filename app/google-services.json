@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79449810972",
+    "project_id": "docucare-98683",
+    "storage_bucket": "docucare-98683.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79449810972:android:b826a1df568d148b3717d9",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWBIqpd9rFVq3NOwq9oxnhIXwVgBhZEZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
