@@ -1,171 +1,90 @@
 package com.example.todo;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
-
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
-import com.example.todo.model.Task;
-import com.example.todo.viewmodel.TaskViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.todo.fragments.CalendarFragment;
+import com.example.todo.fragments.HomeFragment;
+import com.example.todo.fragments.KnowledgeFragment;
+import com.example.todo.fragments.MessagesFragment;
+import com.example.todo.fragments.ProfileFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.List;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FieldValue;
-
-import java.util.HashMap;
-import java.util.Map;
-
-
-public class MainActivity extends AppCompatActivity implements TaskClickInterface {
-
-    private RecyclerView recyclerViewTasks;
-    private TaskAdapter taskAdapter;
-    private FloatingActionButton fabAddTask;
-    private Toolbar toolbar;
-    private TaskViewModel taskViewModel;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        FirebaseApp.initializeApp(this);
+        setContentView(R.layout.activity_main_container);
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
-                if (key.equals("hide_finished_tasks")) {
-                    boolean hideFinishedTasks = sharedPreferences.getBoolean("hide_finished_tasks", false);
-                    taskViewModel.setHideCompletedTasks(hideFinishedTasks);
-                } else if (key.equals("category_filter")) {
-                    boolean categoryFilter = sharedPreferences.getBoolean("category_filter", false);
-                    taskViewModel.setChooseByCategory(categoryFilter);
-                } else if (key.equals("category_list")) {
-                    String categoryList = sharedPreferences.getString("category_list", "");
-                    taskViewModel.setCategory(categoryList);
-                }
-            }
-        };
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+        // Sprawdź czy użytkownik jest zalogowany
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         initUI();
-
-        if (!checkPermission()) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-        }
-    }
-
-
-
-
-
-    public boolean checkPermission() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
-        }
-        return true;
     }
 
     private void initUI() {
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        
+        // Ustaw domyślny fragment (Home)
+        loadFragment(new HomeFragment());
+        bottomNavigation.setSelectedItemId(R.id.nav_home);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            Fragment fragment = null;
 
-        fabAddTask = findViewById(R.id.floatingActionButton);
-        fabAddTask.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-            startActivity(intent);
+            if (itemId == R.id.nav_home) {
+                fragment = new HomeFragment();
+            } else if (itemId == R.id.nav_calendar) {
+                fragment = new CalendarFragment();
+            } else if (itemId == R.id.nav_messages) {
+                fragment = new MessagesFragment();
+            } else if (itemId == R.id.nav_knowledge) {
+                fragment = new KnowledgeFragment();
+            } else if (itemId == R.id.nav_profile) {
+                fragment = new ProfileFragment();
+            }
+
+            if (fragment != null) {
+                loadFragment(fragment);
+                return true;
+            }
+            return false;
         });
-
-        recyclerViewTasks = findViewById(R.id.recyclerViewTasks);
-        recyclerViewTasks.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewTasks.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        taskAdapter = new TaskAdapter(this);
-        taskViewModel = new ViewModelProvider(this, new TaskViewModelFactory(this.getApplication())).get(TaskViewModel.class);
-        taskViewModel.getAllTasks().observe(this, tasks -> {
-            taskAdapter.submitList(tasks);
-        });
-
-
-        recyclerViewTasks.setAdapter(taskAdapter);
-
-
-
-
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        return true;
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (item.getItemId() == R.id.action_search_main) {
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    // Metoda do przełączania zakładek z innych fragmentów (np. z HomeFragment)
+    public void switchToTab(int tabId) {
+        bottomNavigation.setSelectedItemId(tabId);
     }
-
-    @Override
-    public void onTaskClick(Task task) {
-        Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
-        intent.putExtra("editMode", true);
-        intent.putExtra("task", task);
-
-        startActivity(intent);
-    }
-
-    @Override
-    public void onTaskCheckBoxClick(Task task) {
-        taskViewModel.updateTaskCompletedStatus(task, !task.isCompleted());
-    }
-
 }

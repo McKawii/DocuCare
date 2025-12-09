@@ -1,5 +1,44 @@
 <resources>
-    <string name="app_name">ToDo</string>
+    <string name="app_name">Kalendarz badań</string>
+    
+    <!-- Examination Calendar -->
+    <string name="calendar_title">Kalendarz badań</string>
+    <string name="calendar_subtitle">Monitoruj ważność wyników</string>
+    <string name="filter_all">Wszystkie</string>
+    <string name="filter_soon">Wkrótce</string>
+    <string name="filter_overdue">Po terminie</string>
+    <string name="info_matched_list">Lista dopasowana: Kolonoskopia (>50 r.ż.), USG TV (kobiety). Możesz edytować dowolnie.</string>
+    <string name="view_status_legend">Zobacz legendę kolorów statusów</string>
+    <string name="status_no_action">Brak akcji</string>
+    <string name="status_overdue">Po terminie</string>
+    <string name="validity_label">Ważność:</string>
+    <string name="days_valid">%1$d dni</string>
+    <string name="days_overdue">%1$d dni po terminie</string>
+    <string name="last_examination">Ostatnie: %1$s</string>
+    
+    <!-- Edit Examination -->
+    <string name="edit_examination_title">Edytuj badanie</string>
+    <string name="edit_examination_subtitle">Zaktualizuj datę i szczegóły</string>
+    <string name="examination_name_label">Nazwa badania / konsultacji *</string>
+    <string name="examination_name_hint">Wybierz z listy lub wpisz własną nazwę</string>
+    <string name="last_examination_date_label">Data ostatniego badania *</string>
+    <string name="validity_period_label">Okres ważności (dni) *</string>
+    <string name="validity_period_hint">Standardowo: 180-365 dni dla większości badań</string>
+    <string name="notes_label">Notatki (opcjonalne)</string>
+    <string name="notes_hint">Dodatkowe informacje, np. nazwa placówki, numer telefonu…</string>
+    <string name="attach_results_label">Załącz wyniki (opcjonalne)</string>
+    <string name="attach_results_hint">Zeskanuj lub dodaj zdjęcie wyniku</string>
+    <string name="attach_results_soon">(Funkcja dostępna wkrótce)</string>
+    <string name="save_examination">Zapisz badanie</string>
+    <string name="cancel">Anuluj</string>
+    
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Strona</string>
+    <string name="nav_calendar">Kalendarz</string>
+    <string name="nav_messages">Komunikaty</string>
+    <string name="nav_knowledge">Wiedza</string>
+    <string name="nav_profile">Profil</string>
+    
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

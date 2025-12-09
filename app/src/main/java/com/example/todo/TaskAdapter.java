@@ -14,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.model.Task;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
-    private TaskClickInterface taskClickInterface;
+    private final TaskClickInterface taskClickInterface;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
     public TaskAdapter(TaskClickInterface taskClickInterface) {
         super(DIFF_CALLBACK);
@@ -52,9 +55,9 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
         holder.taskStatus.setChecked(currentTask.isCompleted());
         Date dueDate = currentTask.getDueTime();
         if (dueDate != null) {
-            holder.taskDueDate.setText(dueDate.toString());
+            holder.taskDueDate.setText(dateFormat.format(dueDate));
             holder.taskDueDate.setVisibility(View.VISIBLE);
-            if(currentTask.isNotificationEnabled()){
+            if (currentTask.isNotificationEnabled()) {
                 holder.taskAlarm.setVisibility(View.VISIBLE);
             } else {
                 holder.taskAlarm.setVisibility(View.GONE);
@@ -88,7 +91,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     }
 
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView taskTitle;
         private final CheckBox taskStatus;
