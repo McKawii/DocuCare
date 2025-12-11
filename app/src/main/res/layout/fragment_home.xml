@@ -67,6 +67,7 @@
             android:paddingBottom="16dp">
 
             <!-- Kalendarz badań Card -->
+            <!-- Kalendarz badań Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/calendarCard"
                 android:layout_width="match_parent"
@@ -91,14 +92,14 @@
                         android:layout_height="48dp"
                         android:src="@android:drawable/ic_menu_today"
                         android:background="@color/primary_burgundy"
-                        android:tint="@color/white"
                         android:padding="12dp"
                         android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        app:tint="@color/white" />
 
                     <!-- Badge "2 po terminie" w top-right -->
                     <TextView
-                        android:id="@+id/overdueBadge"
+                        android:id="@+id/textCalendarOverdueBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2 po terminie"
@@ -117,7 +118,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_toEndOf="@+id/calendarIcon"
-                        android:layout_toStartOf="@+id/overdueBadge"
+                        android:layout_toStartOf="@id/textCalendarOverdueBadge"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="8dp"
                         android:layout_centerVertical="true">
@@ -146,6 +147,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/textCalendarOk"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="12 OK"
@@ -157,6 +159,7 @@
                                 android:minWidth="0dp" />
 
                             <TextView
+                                android:id="@+id/textCalendarSoon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3 wkrótce"
@@ -169,6 +172,7 @@
                                 android:minWidth="0dp" />
 
                             <TextView
+                                android:id="@+id/textCalendarUrgent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="2 pilne"
@@ -181,8 +185,10 @@
                                 android:minWidth="0dp" />
                         </LinearLayout>
                     </LinearLayout>
+
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
+
 
             <!-- Komunikaty Card -->
             <androidx.cardview.widget.CardView
@@ -209,10 +215,10 @@
                         android:layout_height="48dp"
                         android:src="@android:drawable/ic_menu_recent_history"
                         android:background="@color/info_blue"
-                        android:tint="@color/white"
                         android:padding="12dp"
                         android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        app:tint="@color/white" />
 
                     <!-- Badge "5 nowych" w top-right -->
                     <TextView
@@ -294,9 +300,9 @@
                         android:layout_height="48dp"
                         android:src="@android:drawable/ic_menu_info_details"
                         android:background="@color/primary_burgundy"
-                        android:tint="@color/white"
                         android:padding="12dp"
-                        android:layout_marginEnd="16dp" />
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/white" />
 
                     <LinearLayout
                         android:layout_width="0dp"

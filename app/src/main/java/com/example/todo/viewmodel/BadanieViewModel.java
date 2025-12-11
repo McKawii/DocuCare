@@ -15,8 +15,9 @@ public class BadanieViewModel extends ViewModel {
     private LiveData<List<Badanie>> allBadania;
 
     public BadanieViewModel(Application application) {
-        repository = new BadanieRepository(application);
+        repository = new BadanieRepository();
         allBadania = repository.getAllBadania();
+
     }
 
     public void insertBadanie(Badanie badanie) {

@@ -32,7 +32,10 @@ public class LoginActivity extends AppCompatActivity {
         Button buttonRegister = findViewById(R.id.buttonRegister);
 
         buttonLogin.setOnClickListener(v -> loginUser());
-        buttonRegister.setOnClickListener(v -> registerUser());
+        buttonRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.todo.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,87 +10,129 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.todo.BadanieViewModelFactory;
 import com.example.todo.MainActivity;
 import com.example.todo.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.todo.model.Badanie;
+import com.example.todo.viewmodel.BadanieViewModel;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private TextView welcomeText;
-    private TextView qualificationStatus;
+    // Teksty z kafelka "Kalendarz badań"
+    private TextView textCalendarOk;
+    private TextView textCalendarSoon;
+    private TextView textCalendarUrgent;
+    private TextView textCalendarOverdueBadge;
+
+    // Karty w homepage
     private CardView calendarCard;
     private CardView messagesCard;
     private CardView knowledgeCard;
 
+    private BadanieViewModel badanieViewModel;
+
+    public HomeFragment() {
+        // wymagany pusty konstruktor
+    }
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        welcomeText = view.findViewById(R.id.welcomeText);
-        qualificationStatus = view.findViewById(R.id.qualificationStatus);
+        // Powiązania z ID z fragment_home.xml
+        textCalendarOk = view.findViewById(R.id.textCalendarOk);
+        textCalendarSoon = view.findViewById(R.id.textCalendarSoon);
+        textCalendarUrgent = view.findViewById(R.id.textCalendarUrgent);
+        textCalendarOverdueBadge = view.findViewById(R.id.textCalendarOverdueBadge);
+
         calendarCard = view.findViewById(R.id.calendarCard);
         messagesCard = view.findViewById(R.id.messagesCard);
         knowledgeCard = view.findViewById(R.id.knowledgeCard);
 
-        // Ustaw dane użytkownika - użyj pełnego imienia z Firebase
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String displayName = user.getDisplayName();
-            if (displayName == null || displayName.isEmpty()) {
-                // Jeśli nie ma displayName, użyj emaila (tylko część przed @)
-                String email = user.getEmail();
-                if (email != null && email.contains("@")) {
-                    String emailPart = email.split("@")[0];
-                    // Kapitalizuj pierwszą literę
-                    if (emailPart.length() > 0) {
-                        displayName = emailPart.substring(0, 1).toUpperCase() + 
-                                     (emailPart.length() > 1 ? emailPart.substring(1) : "");
-                    } else {
-                        displayName = "Użytkownik";
-                    }
-                } else {
-                    displayName = "Użytkownik";
-                }
-            }
-            // Wyświetl tylko imię (pierwszy wyraz) jeśli jest pełne imię i nazwisko
-            String[] nameParts = displayName.split("\\s+");
-            String firstName = nameParts.length > 0 ? nameParts[0] : displayName;
-            welcomeText.setText("Witaj, " + firstName);
-        }
+        // ----- KLIKNIĘCIA KART -----
 
-        // Kliknięcie w kafelek Kalendarz badań -> przełącz na zakładkę Kalendarz
         calendarCard.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).switchToTab(R.id.nav_calendar);
             }
         });
 
-        // Kliknięcie w kafelek Komunikaty -> przełącz na zakładkę Komunikaty
         messagesCard.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).switchToTab(R.id.nav_messages);
             }
         });
 
-        // Kliknięcie w kafelek Baza wiedzy -> przełącz na zakładkę Wiedza
         knowledgeCard.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).switchToTab(R.id.nav_knowledge);
             }
         });
 
-        // Przycisk Panel lekarza (na razie Toast)
-        view.findViewById(R.id.doctorPanelButton).setOnClickListener(v -> {
-            android.widget.Toast.makeText(getContext(), "Panel lekarza - funkcja w przygotowaniu", android.widget.Toast.LENGTH_SHORT).show();
-        });
+        // ----- OBSERWACJA BADAŃ -----
+
+        BadanieViewModelFactory factory =
+                new BadanieViewModelFactory(requireActivity().getApplication());
+
+        badanieViewModel = new ViewModelProvider(
+                requireActivity(),
+                factory
+        ).get(BadanieViewModel.class);
+
+        badanieViewModel.getAllBadania()
+                .observe(getViewLifecycleOwner(), this::updateBadaniaSummary);
+    }
+
+    /**
+     * Liczenie OK / wkrótce / pilne / po terminie
+     * na podstawie Badanie.getDniDoWygasniecia()
+     */
+    private void updateBadaniaSummary(List<Badanie> badania) {
+        int ok = 0;
+        int soon = 0;
+        int urgent = 0;
+        int overdue = 0;
+
+        if (badania != null) {
+            for (Badanie b : badania) {
+                long dni = b.getDniDoWygasniecia();  // masz to już w BadanieAdapter
+
+                if (dni > 30) {
+                    ok++;
+                } else if (dni > 7) {
+                    soon++;
+                } else if (dni >= 0) {
+                    urgent++;
+                } else {
+                    overdue++;
+                }
+            }
+        }
+
+        if (textCalendarOk != null) {
+            textCalendarOk.setText(ok + " OK");
+        }
+        if (textCalendarSoon != null) {
+            textCalendarSoon.setText(soon + " wkrótce");
+        }
+        if (textCalendarUrgent != null) {
+            textCalendarUrgent.setText(urgent + " pilne");
+        }
+        if (textCalendarOverdueBadge != null) {
+            textCalendarOverdueBadge.setText(overdue + " po terminie");
+        }
     }
 }
-

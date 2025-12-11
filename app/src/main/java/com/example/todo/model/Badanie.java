@@ -9,6 +9,10 @@ import java.util.Objects;
 @Entity(tableName = "BadanieTable")
 public class Badanie implements Serializable {
 
+    private String firestoreId;
+
+    public String getFirestoreId() { return firestoreId; }
+    public void setFirestoreId(String firestoreId) { this.firestoreId = firestoreId; }
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "Id")
     private int id;

@@ -109,6 +109,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/userBirthDateText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="15.03.1978 (46 lat)"
@@ -145,6 +146,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/userGenderText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Kobieta"
