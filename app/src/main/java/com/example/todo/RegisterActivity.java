@@ -174,10 +174,8 @@ public class RegisterActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(snap -> {
                     if (snap.isEmpty()) {
-                        // kod nieużyty – bierzemy
                         callback.onCodeGenerated(code);
                     } else {
-                        // kolizja – generujemy jeszcze raz
                         generateUniqueUserCode(callback);
                     }
                 })

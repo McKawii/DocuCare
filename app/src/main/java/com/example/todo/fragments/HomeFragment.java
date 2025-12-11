@@ -35,9 +35,6 @@ public class HomeFragment extends Fragment {
 
     private BadanieViewModel badanieViewModel;
 
-    public HomeFragment() {
-        // wymagany pusty konstruktor
-    }
 
     @Nullable
     @Override

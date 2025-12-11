@@ -68,30 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 );
     }
 
-    private void registerUser() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Podaj e-mail i hasło", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (password.length() < 6) {
-            Toast.makeText(this, "Hasło musi mieć min. 6 znaków", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    Toast.makeText(this, "Konto utworzone, zalogowano", Toast.LENGTH_SHORT).show();
-                    goToMain();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Błąd rejestracji: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show()
-                );
-    }
 
     private void goToMain() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
