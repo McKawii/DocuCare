@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <!-- Główny temat aplikacji – ZAWSZE JASNY -->
     <style name="Theme.ToDo" parent="Theme.Material3.Light.NoActionBar">
         <!-- Wyłącz automatyczne „poczernianie” widoków -->
         <item name="android:forceDarkAllowed">false</item>
@@ -13,5 +12,4 @@
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         -->
     </style>
-
 </resources>

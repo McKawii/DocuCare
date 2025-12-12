@@ -11,6 +11,16 @@ public class Badanie implements Serializable {
 
     private String firestoreId;
 
+    private long examId;
+
+    public long getExamId() {
+        return examId;
+    }
+
+    public void setExamId(long examId) {
+        this.examId = examId;
+    }
+
     public String getFirestoreId() { return firestoreId; }
     public void setFirestoreId(String firestoreId) { this.firestoreId = firestoreId; }
     @PrimaryKey(autoGenerate = true)
